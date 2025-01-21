@@ -13,10 +13,10 @@ interface TicketItemProps {
   isDetail?: boolean;
 }
 
-const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
   const detailButton = (
     <Button variant="outline" size="icon" asChild>
-      <Link href={ticketPath(ticket.id)} className="text-sm">
+      <Link prefetch href={ticketPath(ticket.id)} className="text-sm">
         <LucideSquareArrowOutUpRight className="h-4 w-4" />
       </Link>
     </Button>
