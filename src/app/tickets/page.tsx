@@ -1,7 +1,6 @@
 import { Suspense } from "react";
 import { CardCompact } from "@/components/card-compact";
 import { Heading } from "@/components/heading";
-import { RedirectToast } from "@/components/redirect-toast";
 import Spinner from "@/components/spinner";
 import TicketList from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
@@ -24,7 +23,6 @@ const TicketsPage = () => {
           <TicketList />
         </Suspense>
       </div>
-      <RedirectToast />
     </>
   );
 };
