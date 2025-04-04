@@ -9,8 +9,9 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
-import { ticketPath, ticketsPath } from "@/paths";
+import { signInPath, ticketPath, ticketsPath } from "@/paths";
 import { toCent } from "@/utils/currency";
 
 const upsertTicketSchema = z.object({
@@ -25,6 +26,10 @@ export const upsertTicket = async (
   _actionState: ActionState,
   fromData: FormData
 ) => {
+  const { user } = await getAuth();
+  if (!user) {
+    redirect(signInPath());
+  }
   try {
     const data = upsertTicketSchema.parse({
       title: fromData.get("title"),
@@ -34,6 +39,7 @@ export const upsertTicket = async (
     });
     const dbData = {
       ...data,
+      userId: user.id,
       bounty: toCent(data.bounty),
     };
     await prisma.ticket.upsert({
