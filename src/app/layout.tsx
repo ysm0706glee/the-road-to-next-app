@@ -2,8 +2,9 @@ import "./globals.css";
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import { Toaster } from "sonner";
-import { Header } from "@/components/header";
+import { SideBar } from "@/app/_navigation/sidebar/components/sidebar";
 import { ThemeProvider } from "@/components/theme/them-provider";
+import { Header } from "./_navigation/header";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -33,17 +34,20 @@ export default function RootLayout({
       >
         <ThemeProvider>
           <Header />
-          <main
-            className="
-          min-h-screen flex-1
-          overflow-y-auto overflow-x-hidden
-          py-24 px-8
-          bg-secondary/20
-          flex flex-col
-          "
-          >
-            {children}
-          </main>
+          <div className="flex h-screen overflow-hidden border-collapse">
+            <SideBar />
+            <main
+              className="
+            min-h-screen flex-1
+            overflow-y-auto overflow-x-hidden
+            py-24 px-8
+            bg-secondary/20
+            flex flex-col
+            "
+            >
+              {children}
+            </main>
+          </div>
           <Toaster expand />
         </ThemeProvider>
       </body>
