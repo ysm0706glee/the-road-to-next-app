@@ -1,54 +1,55 @@
 "use client";
 
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import { useQueryStates } from "nuqs";
+import { sortOptions, sortParser } from "@/features/ticket/search-params";
 import {
   Select,
   SelectContent,
-  SelectGroup,
   SelectItem,
-  SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
+} from "./ui/select";
 
-type Option = {
+export type SortSelectOption = {
+  sortKey: string;
+  sortValue: string;
   label: string;
-  value: string;
+};
+
+type SortObject = {
+  sortKey: string;
+  sortValue: string;
 };
 
 type SortSelectProps = {
-  defaultValue: string;
-  options: Option[];
+  value: SortObject;
+  onChange: (sort: SortObject) => void;
+  options: SortSelectOption[];
 };
 
-const SortSelect = ({ defaultValue, options }: SortSelectProps) => {
-  const searchParams = useSearchParams();
-  const pathName = usePathname();
-  const { replace } = useRouter();
-
-  const handleSort = (value: string) => {
-    const params = new URLSearchParams(searchParams);
-    if (value === defaultValue) {
-      params.delete("sort");
-    } else if (value) {
-      params.set("sort", value);
-    } else {
-      params.delete("sort");
-    }
-    replace(`${pathName}?${params.toString()}`, { scroll: false });
+const SortSelect = ({ value, onChange, options }: SortSelectProps) => {
+  const handleSort = (compositeKey: string) => {
+    const [sortKey, sortValue] = compositeKey.split("_");
+    onChange({
+      sortKey,
+      sortValue,
+    });
   };
 
   return (
     <Select
       onValueChange={handleSort}
-      defaultValue={searchParams.get("sort")?.toString() || defaultValue}
+      defaultValue={value.sortKey + "_" + value.sortValue}
     >
       <SelectTrigger>
         <SelectValue />
       </SelectTrigger>
       <SelectContent>
         {options.map((option) => (
-          <SelectItem key={option.value} value={option.value}>
+          <SelectItem
+            key={option.sortKey + option.sortValue}
+            value={option.sortKey + "_" + option.sortValue}
+          >
             {option.label}
           </SelectItem>
         ))}
