@@ -1,5 +1,3 @@
-"use client";
-
 import { Prisma } from "@prisma/client";
 import clsx from "clsx";
 import {
@@ -16,8 +14,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { Comments } from "@/features/comment/components/comments";
-import { CommentWithMetadata } from "@/features/comment/types";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
 import { TICKET_ICONS } from "../constants";
@@ -34,7 +30,7 @@ interface TicketItemProps {
     };
   }> & { isOwner: boolean };
   isDetail?: boolean;
-  comments?: CommentWithMetadata[];
+  comments?: React.ReactNode;
 }
 
 const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
@@ -113,7 +109,7 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} comments={comments} /> : null}
+      {comments}
     </div>
   );
 };
