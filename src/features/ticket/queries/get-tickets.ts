@@ -1,5 +1,5 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
-import { isOwner } from "@/features/auth/utills/is-owner";
+import { isOwner } from "@/features/auth/utils/is-owner";
 import { prisma } from "@/lib/prisma";
 import { ParsedSearchParams } from "../search-params";
 
