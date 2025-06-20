@@ -9,6 +9,7 @@ import {
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
 import { generatePasswordResetLink } from "../../password/utils/generate-password-reset-link";
+import { sendEmailPasswordReset } from "../emails/send-email-password-reset";
 import { verifyPasswordHash } from "../utils/hash-and-verify";
 
 const passwordChangeSchema = z.object({
@@ -37,9 +38,7 @@ export const passwordChange = async (
       return toActionState("ERROR", "Incorrect password", formData);
     }
     const passwordResetLink = await generatePasswordResetLink(user.id);
-    // TODO: Send email with reset link
-    // instead we will just print it to the console for now
-    console.log(passwordResetLink);
+    await sendEmailPasswordReset(user.username, user.email, passwordResetLink);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
