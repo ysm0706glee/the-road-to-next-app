@@ -18,12 +18,26 @@ const PasswordChangeForm = () => {
     <Form action={action} actionState={actionState}>
       <Input
         type="password"
-        name="password"
-        placeholder="Password"
-        defaultValue={actionState.payload?.get("password") as string}
+        name="currentPassword"
+        placeholder="Current password"
+        defaultValue={actionState.payload?.get("currentPassword") as string}
       />
-      <FieldError actionState={actionState} name="password" />
-      <SubmitButton label="Send Email" />
+      <FieldError actionState={actionState} name="currentPassword" />
+      <Input
+        type="password"
+        name="newPassword"
+        placeholder="New password"
+        defaultValue={actionState.payload?.get("newPassword") as string}
+      />
+      <FieldError actionState={actionState} name="newPassword" />
+      <Input
+        type="password"
+        name="confirmNewPassword"
+        placeholder="Confirm new password"
+        defaultValue={actionState.payload?.get("confirmNewPassword") as string}
+      />
+      <FieldError actionState={actionState} name="confirmNewPassword" />
+      <SubmitButton label="Change Password" />
     </Form>
   );
 };
