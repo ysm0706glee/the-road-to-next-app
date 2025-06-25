@@ -1,5 +1,6 @@
 "use server";
 
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { setCookieByKey } from "@/actions/cookies";
@@ -8,8 +9,9 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
+import { lucia } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
-import { signInPath } from "@/paths";
+import { ticketsPath } from "@/paths";
 import { hashToken } from "@/utils/crypto";
 import { hashPassword } from "../utils/hash-and-verify";
 
@@ -67,9 +69,22 @@ export const passwordReset = async (
       where: { id: passwordResetToken.userId },
       data: { passwordHash },
     });
+    // Create a new session for the user
+    const session = await lucia.createSession(passwordResetToken.userId, {});
+    // Set the authentication cookie
+    const sessionCookie = lucia.createSessionCookie(session.id);
+    (await cookies()).set(
+      sessionCookie.name,
+      sessionCookie.value,
+      sessionCookie.attributes
+    );
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
-  await setCookieByKey("toast", "Successfully reset password");
-  return redirect(signInPath());
+  await setCookieByKey(
+    "toast",
+    "Your password has been reset and you’re now signed in."
+  );
+  // Redirect the user directly to their dashboard instead of the sign-in page
+  return redirect(ticketsPath());
 };
