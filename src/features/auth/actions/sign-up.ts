@@ -10,11 +10,10 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/components/form/utils/to-action-state";
-import { sendEmailWelcome } from "@/features/password/emails/send-email-welcome";
+import { inngest } from "@/lib/inngest";
 import { lucia } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
-import { signInPath, ticketsPath } from "@/paths";
-import { getBaseUrl } from "@/utils/url";
+import { ticketsPath } from "@/paths";
 
 const signUpSchema = z
   .object({
@@ -60,8 +59,12 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       sessionCookie.value,
       sessionCookie.attributes
     );
-    const loginUrl = getBaseUrl() + signInPath();
-    await sendEmailWelcome(username, email, loginUrl);
+    await inngest.send({
+      name: "app/welcome-email",
+      data: {
+        userId: user.id,
+      },
+    });
   } catch (error) {
     if (
       error instanceof Prisma.PrismaClientKnownRequestError &&
