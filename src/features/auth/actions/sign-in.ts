@@ -24,6 +24,7 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
     const { email, password } = signInSchema.parse(
       Object.fromEntries(formData)
     );
+
     const user = await prisma.user.findUnique({
       where: { email },
     });
@@ -31,16 +32,20 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
     if (!user) {
       return toActionState("ERROR", "Incorrect email or password", formData);
     }
+
     const validPassword = await verifyPasswordHash(user.passwordHash, password);
 
     if (!validPassword) {
       return toActionState("ERROR", "Incorrect email or password", formData);
     }
+
     const sessionToken = generateRandomToken();
     const session = await createSession(sessionToken, user.id);
+
     await setSessionCookie(sessionToken, session.expiresAt);
   } catch (error) {
     return fromErrorToActionState(error, formData);
   }
+
   redirect(ticketsPath());
 };
