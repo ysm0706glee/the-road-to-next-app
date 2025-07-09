@@ -4,7 +4,7 @@ import localFont from "next/font/local";
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 import { Toaster } from "sonner";
 import { SideBar } from "@/app/_navigation/sidebar/components/sidebar";
-import { ThemeProvider } from "@/components/theme/them-provider";
+import { ThemeProvider } from "@/components/theme/theme-provider";
 import { Header } from "./_navigation/header";
 import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
 
