@@ -13,8 +13,8 @@ import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
 import { generateRandomToken } from "@/utils/crypto";
 import { getAuthOrRedirect } from "../queries/get-auth-or-redirect";
+import { consumeValidEmailVerificationToken } from "../utils/consume-valid-email-verification-token";
 import { setSessionCookie } from "../utils/session-cookie";
-import { validateEmailVerificationCode } from "../utils/validate-email-verification-code";
 
 const emailVerificationSchema = z.object({
   code: z.string().length(8),
@@ -33,13 +33,13 @@ export const emailVerification = async (
       code: formData.get("code"),
     });
 
-    const validCode = await validateEmailVerificationCode(
+    const verifiedEmail = await consumeValidEmailVerificationToken(
       user.id,
-      user.email,
+      // user.email,
       code
     );
 
-    if (!validCode) {
+    if (!verifiedEmail) {
       return toActionState("ERROR", "Invalid or expired code");
     }
 
@@ -49,7 +49,7 @@ export const emailVerification = async (
 
     await prisma.user.update({
       where: { id: user.id },
-      data: { emailVerified: true },
+      data: { email: verifiedEmail, emailVerified: true },
     });
 
     const sessionToken = generateRandomToken();
