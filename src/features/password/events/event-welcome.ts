@@ -11,7 +11,7 @@ export type WelcomeEventArgs = {
 
 export const WelcomeEvent = inngest.createFunction(
   { id: "welcome" },
-  { event: "app/welcome-email" },
+  { event: "app/auth.sign-up" },
   async ({ event, step }) => {
     await step.sleep("wait-5-minutes", "5 minutes");
     const { userId } = event.data;

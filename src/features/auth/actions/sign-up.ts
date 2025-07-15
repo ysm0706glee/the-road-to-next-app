@@ -56,12 +56,6 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
       },
     });
     await inngest.send({
-      name: "app/welcome-email",
-      data: {
-        userId: user.id,
-      },
-    });
-    await inngest.send({
       name: "app/auth.sign-up",
       data: {
         userId: user.id,
