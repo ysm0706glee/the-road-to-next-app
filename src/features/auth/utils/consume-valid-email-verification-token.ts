@@ -1,8 +1,8 @@
 import { prisma } from "@/lib/prisma";
 
-export const validateEmailVerificationCode = async (
+export const consumeValidEmailVerificationToken = async (
   userId: string,
-  email: string,
+  // email: string,
   code: string
 ) => {
   const emailVerificationToken = await prisma.emailVerificationToken.findFirst({
@@ -18,8 +18,8 @@ export const validateEmailVerificationCode = async (
   if (isExpired) {
     return false;
   }
-  if (emailVerificationToken.email !== email) {
-    return false;
-  }
-  return true;
+  // if (emailVerificationToken.email !== email) {
+  //   return false;
+  // }
+  return emailVerificationToken.email;
 };
