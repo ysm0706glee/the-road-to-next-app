@@ -55,17 +55,14 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         passwordHash,
       },
     });
-
     await inngest.send({
       name: "app/auth.sign-up",
       data: {
         userId: user.id,
       },
     });
-
     const sessionToken = generateRandomToken();
     const session = await createSession(sessionToken, user.id);
-
     await setSessionCookie(sessionToken, session.expiresAt);
   } catch (error) {
     if (
@@ -78,7 +75,6 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         formData
       );
     }
-
     return fromErrorToActionState(error, formData);
   }
 
