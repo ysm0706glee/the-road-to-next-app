@@ -1,4 +1,6 @@
+import { Footer } from "@/components/footer";
 import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { getActiveOrganizationByUser } from "@/features/organization/queries/get-active-organization-by-user";
 
 export default async function AuthenticatedLayout({
   children,
@@ -6,5 +8,14 @@ export default async function AuthenticatedLayout({
   children: React.ReactNode;
 }>) {
   await getAuthOrRedirect();
-  return <>{children}</>;
+  const activeOrganization = await getActiveOrganizationByUser();
+
+  return (
+    <>
+      {children}
+      {activeOrganization ? (
+        <Footer activeOrganizationName={activeOrganization.name} />
+      ) : null}
+    </>
+  );
 }
