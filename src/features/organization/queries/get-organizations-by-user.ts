@@ -1,7 +1,7 @@
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
 
-export const getOrganizationByUser = async () => {
+export const getOrganizationsByUser = async () => {
   const { user } = await getAuth();
 
   if (!user) {

@@ -24,21 +24,20 @@ const SubmitButton = ({ label, icon, variant, size }: SubmitButtonProps) => {
 
   return (
     <Button disabled={pending} type="submit" variant={variant} size={size}>
-      {pending && (
-        <LucideLoaderCircle
-          className={clsx("h-4 w-4 animate-spin", {
-            "mr-2": !!label,
-          })}
-        />
-      )}
-      {label && <span>{label}</span>}
-      {!pending && icon && (
-        <span className={clsx({ "ml-2": !!label })}>
-          {cloneElement(icon, {
-            className: "h-4 w-4",
-          })}
-        </span>
-      )}
+      {pending ? (
+        <LucideLoaderCircle className="h-4 w-4 animate-spin" />
+      ) : icon ? (
+        <>
+          {!pending && icon && (
+            <span className={clsx({ "ml-2": !!label })}>
+              {cloneElement(icon, {
+                className: "h-4 w-4",
+              })}
+            </span>
+          )}
+        </>
+      ) : null}
+      {label}
     </Button>
   );
 };

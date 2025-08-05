@@ -12,7 +12,7 @@ const users = [
   {
     username: "user",
     email: "ysm0706glee@gmail.com",
-    emailVerified: false,
+    emailVerified: true,
   },
 ];
 
@@ -70,6 +70,7 @@ const seed = async () => {
     data: {
       userId: dbUsers[0].id,
       organizationId: dbOrganization.id,
+      isActive: true,
     },
   });
   const dbTickets = await prisma.ticket.createManyAndReturn({
