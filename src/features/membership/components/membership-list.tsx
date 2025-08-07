@@ -11,9 +11,13 @@ import { getMemberships } from "../queries/get-memberships";
 
 type MembershipListProps = {
   organizationId: string;
+  currentUserId: string;
 };
 
-const MembershipList = async ({ organizationId }: MembershipListProps) => {
+const MembershipList = async ({
+  organizationId,
+  currentUserId,
+}: MembershipListProps) => {
   const memberships = await getMemberships(organizationId);
 
   return (
@@ -32,7 +36,12 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
 
           return (
             <TableRow key={membership.userId}>
-              <TableCell>{membership.user.username}</TableCell>
+              <TableCell>
+                {membership.user.username}{" "}
+                {membership.userId === currentUserId && (
+                  <span className="text-muted-foreground text-xs">(You)</span>
+                )}
+              </TableCell>
               <TableCell>{membership.user.email}</TableCell>
               <TableCell>
                 {membership.user.emailVerified ? (

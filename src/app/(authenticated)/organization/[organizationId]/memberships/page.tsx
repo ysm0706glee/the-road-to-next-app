@@ -1,6 +1,7 @@
 import { Suspense } from "react";
 import { Heading } from "@/components/heading";
 import { Spinner } from "@/components/spinner";
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { MembershipList } from "@/features/membership/components/membership-list";
 
 type MembershipsPageProps = {
@@ -12,6 +13,8 @@ type MembershipsPageProps = {
 const MembershipsPage = async ({ params }: MembershipsPageProps) => {
   const { organizationId } = await params;
 
+  const { user } = await getAuthOrRedirect();
+
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -19,7 +22,10 @@ const MembershipsPage = async ({ params }: MembershipsPageProps) => {
         description="Manage members in your organization"
       />
       <Suspense fallback={<Spinner />}>
-        <MembershipList organizationId={organizationId} />
+        <MembershipList
+          organizationId={organizationId}
+          currentUserId={user.id}
+        />
       </Suspense>
     </div>
   );
