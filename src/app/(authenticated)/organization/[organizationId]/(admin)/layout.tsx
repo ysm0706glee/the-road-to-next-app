@@ -1,3 +1,4 @@
+import { Badge } from "@/components/ui/badge";
 import { getAdminOrRedirect } from "@/features/membership/queries/get-admin-or-redirect";
 
 export default async function AdminLayout({
@@ -11,5 +12,10 @@ export default async function AdminLayout({
 
   await getAdminOrRedirect(organizationId);
 
-  return <>{children}</>;
+  return (
+    <>
+      <Badge>You’re in the admin area</Badge>
+      {children}
+    </>
+  );
 }
