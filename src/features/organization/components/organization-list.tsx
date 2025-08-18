@@ -18,7 +18,7 @@ import {
 import { MembershipDeleteButton } from "@/features/membership/components/membership-delete-button";
 import { membershipsPath } from "@/paths";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
-import { OrganizationDeleteButton } from "./Organization-delete-button";
+import { OrganizationDeleteButton } from "./organization-delete-button";
 import { OrganizationSwitchButton } from "./organization-switch-button";
 
 type OrganizationListProps = {
