@@ -2,7 +2,6 @@ import { format } from "date-fns";
 import {
   LucideArrowLeftRight,
   LucideArrowUpRightFromSquare,
-  LucidePen,
 } from "lucide-react";
 import Link from "next/link";
 import { SubmitButton } from "@/components/form/submit-button";
@@ -18,7 +17,8 @@ import {
 import { MembershipDeleteButton } from "@/features/membership/components/membership-delete-button";
 import { membershipsPath } from "@/paths";
 import { getOrganizationsByUser } from "../queries/get-organizations-by-user";
-import { OrganizationDeleteButton } from "./Organization-delete-button";
+import { OrganizationDeleteButton } from "./organization-delete-button";
+import { OrganizationEditButton } from "./organization-edit-button";
 import { OrganizationSwitchButton } from "./organization-switch-button";
 
 type OrganizationListProps = {
@@ -82,12 +82,6 @@ const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
             />
           );
 
-          const editButton = (
-            <Button variant="outline" size="icon">
-              <LucidePen className="w-4 h-4" />
-            </Button>
-          );
-
           const deleteButton = (
             <OrganizationDeleteButton organizationId={organization.id} />
           );
@@ -100,7 +94,11 @@ const OrganizationList = async ({ limitedAccess }: OrganizationListProps) => {
             <>
               {switchButton}
               {limitedAccess ? null : isAdmin ? detailButton : placeholder}
-              {limitedAccess ? null : isAdmin ? editButton : placeholder}
+              {limitedAccess ? null : isAdmin ? (
+                <OrganizationEditButton organizationId={organization.id} />
+              ) : (
+                placeholder
+              )}
               {limitedAccess ? null : leaveButton}
               {limitedAccess ? null : isAdmin ? deleteButton : placeholder}
             </>
