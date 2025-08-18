@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/table";
 import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
+import { MembershipMoreMenu } from "./membership-more-menu";
 
 type MembershipListProps = {
   organizationId: string;
@@ -24,11 +25,20 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
           <TableHead>Username</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>Verified Email</TableHead>
+          <TableHead>Role</TableHead>
           <TableHead />
         </TableRow>
       </TableHeader>
       <TableBody>
         {memberships.map((membership) => {
+          const membershipMoreMenu = (
+            <MembershipMoreMenu
+              userId={membership.userId}
+              organizationId={organizationId}
+              membershipRole={membership.membershipRole}
+            />
+          );
+
           const deleteButton = (
             <MembershipDeleteButton
               organizationId={organizationId}
@@ -36,7 +46,12 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
             />
           );
 
-          const buttons = <>{deleteButton}</>;
+          const buttons = (
+            <>
+              {membershipMoreMenu}
+              {deleteButton}
+            </>
+          );
 
           return (
             <TableRow key={membership.userId}>
@@ -49,6 +64,7 @@ const MembershipList = async ({ organizationId }: MembershipListProps) => {
                   <LucideBan />
                 )}
               </TableCell>
+              <TableCell>{membership.membershipRole}</TableCell>
               <TableCell className="flex justify-end gap-x-2">
                 {buttons}
               </TableCell>

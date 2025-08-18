@@ -1,31 +1,25 @@
 "use server";
 
+import { MembershipRole } from "@prisma/client";
+import { revalidatePath } from "next/cache";
 import { toActionState } from "@/components/form/utils/to-action-state";
-import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
 import { prisma } from "@/lib/prisma";
+import { membershipsPath } from "@/paths";
+import { getAdminOrRedirect } from "../queries/get-admin-or-redirect";
 import { getMemberships } from "../queries/get-memberships";
 
-export const deleteMembership = async ({
+export const updateMembershipRole = async ({
   userId,
   organizationId,
+  membershipRole,
 }: {
   userId: string;
   organizationId: string;
+  membershipRole: MembershipRole;
 }) => {
-  const { user } = await getAuthOrRedirect();
+  await getAdminOrRedirect(organizationId);
 
   const memberships = await getMemberships(organizationId);
-
-  // Check if it's rhw last membership
-
-  const isLastMembership = (memberships ?? []).length <= 1;
-
-  if (isLastMembership) {
-    return toActionState(
-      "ERROR",
-      "You cannot delete the last membership of an organization"
-    );
-  }
 
   // Check if membership exists
 
@@ -44,7 +38,6 @@ export const deleteMembership = async ({
   );
 
   const removesAdmin = targetMembership.membershipRole === "ADMIN";
-
   const isLastAdmin = adminMemberships.length <= 1;
 
   if (removesAdmin && isLastAdmin) {
@@ -54,36 +47,21 @@ export const deleteMembership = async ({
     );
   }
 
-  // Check if user is authorized
+  // Okay: Everything checked ...
 
-  const myMembership = (memberships ?? []).find(
-    (membership) => membership.userId === user.id
-  );
-
-  const isMyself = user.id === userId;
-
-  const isAdmin = myMembership?.membershipRole === "ADMIN";
-
-  if (!isAdmin && !isMyself) {
-    return toActionState(
-      "ERROR",
-      "You can only delete memberships as an admin"
-    );
-  }
-
-  await prisma.membership.delete({
+  await prisma.membership.update({
     where: {
       membershipId: {
         userId,
         organizationId,
       },
     },
+    data: {
+      membershipRole,
+    },
   });
 
-  return toActionState(
-    "SUCCESS",
-    isMyself
-      ? "You have left the organization"
-      : "The membership has been deleted"
-  );
+  revalidatePath(membershipsPath(organizationId));
+
+  return toActionState("SUCCESS", "The role has been updated");
 };
