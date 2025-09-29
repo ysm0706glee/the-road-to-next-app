@@ -21,7 +21,7 @@ export const navItems: NavItem[] = [
     href: homePath(),
   },
   {
-    title: "Our Ticket",
+    title: "Our Tickets",
     icon: <LucideBookCopy />,
     href: ticketsByOrganizationPath(),
   },

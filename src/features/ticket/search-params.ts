@@ -9,6 +9,10 @@ export const searchParser = parseAsString.withDefault("").withOptions({
   clearOnDefault: true,
 });
 
+export const filterParser = parseAsString
+  .withDefault("all")
+  .withOptions({ shallow: false, clearOnDefault: true });
+
 export const sortParser = {
   sortKey: parseAsString.withDefault("createdAt"),
   sortValue: parseAsString.withDefault("desc"),
@@ -31,6 +35,7 @@ export const paginationOptions = {
 
 export const searchParamsCache = createSearchParamsCache({
   search: searchParser,
+  filter: filterParser,
   ...sortParser,
   ...paginationParser,
 });

@@ -2,6 +2,7 @@ import { Placeholder } from "@/components/placeholder";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTickets } from "@/features/ticket/queries/get-tickets";
 import { ParsedSearchParams } from "../search-params";
+import { TicketFilter } from "./ticket-filter";
 import { TicketPagination } from "./ticket-pagination";
 import { TicketSearchInput } from "./ticket-search-input";
 import { TicketSortSelect } from "./ticket-sort-select";
@@ -9,17 +10,19 @@ import { TicketSortSelect } from "./ticket-sort-select";
 type TicketListProps = {
   userId?: string;
   byOrganization?: boolean;
+  isMyTicketsPage?: boolean;
   searchParams: ParsedSearchParams;
 };
 
 const TicketList = async ({
   userId,
   byOrganization = false,
+  isMyTicketsPage = false,
   searchParams,
 }: TicketListProps) => {
   const { list: tickets, metadata: ticketMetadata } = await getTickets(
     userId,
-    byOrganization,
+    byOrganization || searchParams.filter === "activeOrganization",
     searchParams
   );
 
@@ -34,6 +37,7 @@ const TicketList = async ({
             { sortKey: "bounty", sortValue: "desc", label: "Bounty" },
           ]}
         />
+        {isMyTicketsPage ? <TicketFilter /> : null}
       </div>
       {tickets.length ? (
         tickets.map((ticket) => <TicketItem key={ticket.id} ticket={ticket} />)
