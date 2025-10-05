@@ -13,6 +13,11 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { deleteTicket } from "../actions/delete-ticket";
 import { updateTicketStatus } from "../actions/update-ticket-status";
 import { TICKET_STATUS_LABELS } from "../constants";
@@ -24,7 +29,6 @@ type TicketMoreMenuProps = {
 };
 
 const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
-  console.log(ticket.permissions.canDeleteTicket);
   const [deleteButton, deleteDialog] = useConfirmDialog({
     action: deleteTicket.bind(null, ticket.id),
     trigger: (
@@ -61,6 +65,24 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
     </DropdownMenuRadioGroup>
   );
 
+  const deleteMenuItem = ticket.permissions.canDeleteTicket ? (
+    deleteButton
+  ) : (
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <div>
+          <DropdownMenuItem disabled>
+            <LucideTrash className="mr-2 h-4 w-4" />
+            <span>Delete</span>
+          </DropdownMenuItem>
+        </div>
+      </TooltipTrigger>
+      <TooltipContent>
+        You do not have permission to delete this ticket.
+      </TooltipContent>
+    </Tooltip>
+  );
+
   return (
     <>
       {deleteDialog}
@@ -69,7 +91,7 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMoreMenuProps) => {
         <DropdownMenuContent className="w-56" side="right">
           {ticketStatusRadioGroupItems}
           <DropdownMenuSeparator />
-          {deleteButton}
+          {deleteMenuItem}
         </DropdownMenuContent>
       </DropdownMenu>
     </>
