@@ -34,13 +34,14 @@ const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = ticket.isOwner ? (
-    <Button variant="outline" size="icon" asChild>
-      <Link prefetch href={ticketEditPath(ticket.id)}>
-        <LucidePencil className="h-4 w-4" />
-      </Link>
-    </Button>
-  ) : null;
+  const editButton =
+    ticket.isOwner && ticket.permissions.canUpdateTicket ? (
+      <Button variant="outline" size="icon" asChild>
+        <Link prefetch href={ticketEditPath(ticket.id)}>
+          <LucidePencil className="h-4 w-4" />
+        </Link>
+      </Button>
+    ) : null;
 
   const moreMenu = ticket.isOwner ? (
     <TicketMoreMenu

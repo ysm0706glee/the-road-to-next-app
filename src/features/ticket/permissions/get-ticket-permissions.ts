@@ -32,5 +32,6 @@ export const getTicketPermissions = async ({
 
   return {
     canDeleteTicket: membership.canDeleteTicket,
+    canUpdateTicket: membership.canUpdateTicket,
   };
 };
