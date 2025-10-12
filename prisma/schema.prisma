@@ -16,11 +16,25 @@ datasource db {
 
 model Organization {
   id          String       @id @default(cuid())
-  createAt    DateTime     @default(now())
+  createdAt   DateTime     @default(now())
   updateAt    DateTime     @updatedAt
   name        String
   memberships Membership[]
   tickets     Ticket[]
+  invitation  Invitation[]
+}
+
+model Invitation {
+  createdAt       DateTime     @default(now())
+  updateAt        DateTime     @updatedAt
+  tokenHash       String       @unique
+  email           String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId  String
+  invitedByUser   User?        @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+  invitedByUserId String?
+
+  @@index([organizationId])
 }
 
 model Membership {
@@ -59,6 +73,7 @@ model User {
   passwordResetTokens    PasswordResetToken[]
   emailVerificationToken EmailVerificationToken[]
   memberships            Membership[]
+  invitesByUser          Invitation[]
 }
 
 model EmailVerificationToken {
