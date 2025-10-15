@@ -5,6 +5,7 @@ export const ticketPath = (ticketId: string) => `/tickets/${ticketId}`;
 export const ticketEditPath = (ticketId: string) => `/tickets/${ticketId}/edit`;
 
 export const emailVerificationPath = () => "/email-verification";
+export const emailInvitationPath = () => "/email-invitation";
 export const onboardingPath = () => "/onboarding";
 export const selectActiveOrganizationPath = () =>
   "/onboarding/select-active-organization";
