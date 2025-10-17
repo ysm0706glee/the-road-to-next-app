@@ -45,7 +45,12 @@ export const acceptInvitation = async (tokenId: string) => {
         }),
       ]);
     } else {
-      // TODO: decide what to do when user doesn't exist (e.g. keep invitation, create pending membership, etc.)
+      await prisma.invitation.update({
+        where: { tokenHash },
+        data: {
+          status: "ACCEPTED_WITHOUT_ACCOUNT",
+        },
+      });
     }
   } catch (error) {
     return fromErrorToActionState(error);
