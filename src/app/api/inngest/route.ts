@@ -1,6 +1,7 @@
 import { serve } from "inngest/next";
 import { emailVerificationEvent } from "@/features/auth/events/event-email-verification";
 import { emailChangeEvent } from "@/features/emails/events/event-email-change";
+import { invitationEvent } from "@/features/invitation/events/event-invitation";
 import { invitationCreatedEvent } from "@/features/invitation/events/event-invitation-created";
 import { passwordResetEvent } from "@/features/password/events/event-password-reset";
 import { WelcomeEvent } from "@/features/password/events/event-welcome";
@@ -14,5 +15,6 @@ export const { GET, POST, PUT } = serve({
     emailVerificationEvent,
     emailChangeEvent,
     invitationCreatedEvent,
+    invitationEvent,
   ],
 });
