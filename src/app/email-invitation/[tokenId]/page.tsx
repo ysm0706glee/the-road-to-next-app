@@ -1,5 +1,5 @@
 import { CardCompact } from "@/components/card-compact";
-import { InvitationAcceptForm } from "@/features/invitation/components/invitation-accept-form";
+import { acceptInvitation } from "@/features/invitation/actions/accept-invitation";
 
 type EmailInvitationPageProps = {
   params: Promise<{
@@ -10,13 +10,19 @@ type EmailInvitationPageProps = {
 const EmailInvitationPage = async ({ params }: EmailInvitationPageProps) => {
   const { tokenId } = await params;
 
+  const result = await acceptInvitation(tokenId);
+
   return (
     <div className="flex-1 flex flex-col justify-center items-center">
       <CardCompact
-        title="Invitation to Organization"
-        description="Accept the invitation to join the organization"
+        title="Invitation Error"
+        description={
+          result.status === "ERROR"
+            ? result.message
+            : "Failed to accept invitation. Please contact support."
+        }
         className="w-full max-w-[420px] animate-fade-from-top"
-        content={<InvitationAcceptForm tokenId={tokenId} />}
+        content={null}
       />
     </div>
   );

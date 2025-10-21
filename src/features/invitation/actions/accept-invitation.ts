@@ -3,10 +3,6 @@
 import { Invitation } from "@prisma/client";
 import { redirect } from "next/navigation";
 import { setCookieByKey } from "@/actions/cookies";
-import {
-  fromErrorToActionState,
-  toActionState,
-} from "@/components/form/utils/to-action-state";
 import { getAuth } from "@/features/auth/queries/get-auth";
 import { prisma } from "@/lib/prisma";
 import { membershipsPath, signInPath } from "@/paths";
@@ -23,7 +19,10 @@ export const acceptInvitation = async (tokenId: string) => {
     });
 
     if (!invitation) {
-      return toActionState("ERROR", "Revoked or invalid verification token");
+      return {
+        status: "ERROR",
+        message: "Revoked or invalid verification token",
+      };
     }
 
     const user = await prisma.user.findUnique({
@@ -53,7 +52,10 @@ export const acceptInvitation = async (tokenId: string) => {
       });
     }
   } catch (error) {
-    return fromErrorToActionState(error);
+    return {
+      status: "ERROR",
+      message: error instanceof Error ? error.message : "Unknown error",
+    };
   }
 
   await setCookieByKey("toast", "Invitation accepted");
